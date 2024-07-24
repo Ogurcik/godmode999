@@ -1,4 +1,4 @@
--- Создание интерфейса
+-- Creating the interface
 local ScreenGui = Instance.new("ScreenGui")
 local MainFrame = Instance.new("Frame")
 local ToggleButton = Instance.new("TextButton")
@@ -14,7 +14,7 @@ local RunService = game:GetService("RunService")
 ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 ScreenGui.Name = "MainMenuGui"
 
--- Настройка главной рамки
+-- Configuring the main frame
 MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
 MainFrame.Position = UDim2.new(0.5, -200, 0.5, -200)
@@ -22,47 +22,47 @@ MainFrame.Size = UDim2.new(0, 400, 0, 400)
 MainFrame.Visible = false
 MainFrame.BorderSizePixel = 0
 
--- Настройка кнопки открытия/закрытия меню
+-- Configuring the toggle button
 ToggleButton.Parent = ScreenGui
 ToggleButton.BackgroundColor3 = Color3.new(0.5, 0.5, 0.5)
 ToggleButton.Position = UDim2.new(0, 0, 0, 0)
 ToggleButton.Size = UDim2.new(0, 100, 0, 50)
-ToggleButton.Text = "Меню"
+ToggleButton.Text = "Menu"
 ToggleButton.TextColor3 = Color3.new(1, 1, 1)
 ToggleButton.Font = Enum.Font.SourceSans
 ToggleButton.TextSize = 24
 
--- Настройка кнопки закрытия меню
+-- Configuring the close button
 CloseButton.Parent = MainFrame
 CloseButton.BackgroundColor3 = Color3.new(0.7, 0.1, 0.1)
 CloseButton.Position = UDim2.new(0.5, -50, 1, -40)
 CloseButton.Size = UDim2.new(0, 100, 0, 30)
-CloseButton.Text = "Закрыть"
+CloseButton.Text = "Close"
 CloseButton.TextColor3 = Color3.new(1, 1, 1)
 CloseButton.Font = Enum.Font.SourceSans
 CloseButton.TextSize = 24
 
--- Настройка кнопки заморозки
+-- Configuring the freeze button
 FreezeButton.Parent = MainFrame
 FreezeButton.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
 FreezeButton.Position = UDim2.new(0.5, -50, 0, 20)
 FreezeButton.Size = UDim2.new(0, 100, 0, 50)
-FreezeButton.Text = "Остановиться"
+FreezeButton.Text = "Freeze"
 FreezeButton.TextColor3 = Color3.new(1, 1, 1)
 FreezeButton.Font = Enum.Font.SourceSans
 FreezeButton.TextSize = 24
 
--- Настройка метки скорости
+-- Configuring the speed label
 SpeedLabel.Parent = MainFrame
 SpeedLabel.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
 SpeedLabel.Position = UDim2.new(0.1, 0, 0.4, 0)
 SpeedLabel.Size = UDim2.new(0.8, 0, 0, 30)
-SpeedLabel.Text = "Скорость:"
+SpeedLabel.Text = "Speed:"
 SpeedLabel.TextColor3 = Color3.new(1, 1, 1)
 SpeedLabel.Font = Enum.Font.SourceSans
 SpeedLabel.TextSize = 24
 
--- Настройка поля ввода скорости
+-- Configuring the speed input box
 SpeedInput.Parent = MainFrame
 SpeedInput.BackgroundColor3 = Color3.new(0.5, 0.5, 0.5)
 SpeedInput.Position = UDim2.new(0.1, 0, 0.5, 0)
@@ -72,7 +72,7 @@ SpeedInput.TextColor3 = Color3.new(1, 1, 1)
 SpeedInput.Font = Enum.Font.SourceSans
 SpeedInput.TextSize = 24
 
--- Настройка углов кнопок
+-- Configuring button corners
 UICorner.CornerRadius = UDim.new(0, 10)
 UICorner.Parent = ToggleButton
 
@@ -85,7 +85,7 @@ UICornerFreeze.Parent = FreezeButton
 local UICornerSpeedInput = UICorner:Clone()
 UICornerSpeedInput.Parent = SpeedInput
 
--- Настройка обводки кнопок
+-- Configuring button strokes
 UIStroke.Parent = ToggleButton
 UIStroke.Color = Color3.new(0, 0, 0)
 UIStroke.Thickness = 2
@@ -111,10 +111,10 @@ local function toggleFreeze()
 
     if humanoid then
         if not isFrozen then
-            -- Остановка персонажа для других игроков
+            -- Stop the character for other players
             character.HumanoidRootPart.Anchored = true
 
-            -- Событие для локального перемещения
+            -- Event for local movement
             connection = RunService.RenderStepped:Connect(function()
                 if isFrozen then
                     local moveDirection = humanoid.MoveDirection
@@ -123,28 +123,28 @@ local function toggleFreeze()
                 end
             end)
 
-            -- Включение заморозки
+            -- Enable freezing
             isFrozen = true
-            FreezeButton.Text = "Разморозить"
+            FreezeButton.Text = "Unfreeze"
         else
-            -- Возвращение к обычному состоянию
+            -- Return to normal state
             character.HumanoidRootPart.Anchored = false
             humanoid.WalkSpeed = originalWalkSpeed
 
-            -- Отключение заморозки
+            -- Disable freezing
             isFrozen = false
-            FreezeButton.Text = "Остановиться"
+            FreezeButton.Text = "Freeze"
             if connection then connection:Disconnect() end
         end
     end
 end
 
--- Функция для обновления скорости с клавиатуры
+-- Function to update speed from input
 local function updateSpeedFromInput()
     local inputSpeed = tonumber(SpeedInput.Text)
     if inputSpeed and inputSpeed > 0 then
         currentSpeed = inputSpeed
-        SpeedLabel.Text = "Скорость: " .. tostring(currentSpeed)
+        SpeedLabel.Text = "Speed: " .. tostring(currentSpeed)
     else
         SpeedInput.Text = tostring(currentSpeed)
     end
@@ -156,7 +156,7 @@ SpeedInput.FocusLost:Connect(function(enterPressed)
     end
 end)
 
--- Добавление функции перетаскивания меню
+-- Adding drag functionality to the menu
 local dragging
 local dragInput
 local dragStart
@@ -198,4 +198,3 @@ end)
 FreezeButton.MouseButton1Click:Connect(function()
     toggleFreeze()
 end)
-
