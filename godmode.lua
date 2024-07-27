@@ -1,4 +1,4 @@
--- Создание интерфейса
+-- Creating the interface
 local ScreenGui = Instance.new("ScreenGui")
 local MainFrame = Instance.new("Frame")
 local ToggleButton = Instance.new("TextButton")
@@ -15,7 +15,7 @@ local RunService = game:GetService("RunService")
 ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 ScreenGui.Name = "MainMenuGui"
 
--- Настройка шаблонов для углов и обводки
+-- Setting up templates for corners and strokes
 UICornerTemplate.CornerRadius = UDim.new(0, 12)
 UIStrokeTemplate.Color = Color3.new(0, 0, 0)
 UIStrokeTemplate.Thickness = 2
@@ -35,7 +35,7 @@ local function createButton(parent, position, size, text, bgColor, textColor)
     return button
 end
 
--- Настройка главной рамки
+-- Setting up the main frame
 MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 MainFrame.Position = UDim2.new(0.5, -200, 0.5, -200)
@@ -44,17 +44,17 @@ MainFrame.Visible = false
 MainFrame.BorderSizePixel = 0
 UICornerTemplate:Clone().Parent = MainFrame
 
--- Настройка кнопок
-ToggleButton = createButton(ScreenGui, UDim2.new(0, 0, 0, 0), UDim2.new(0, 100, 0, 50), "Меню", Color3.fromRGB(60, 60, 60), Color3.fromRGB(255, 255, 255))
-CloseButton = createButton(MainFrame, UDim2.new(0.5, -50, 1, -40), UDim2.new(0, 100, 0, 30), "Закрыть", Color3.fromRGB(220, 60, 60), Color3.fromRGB(255, 255, 255))
-FreezeButton = createButton(MainFrame, UDim2.new(0.5, -50, 0, 20), UDim2.new(0, 100, 0, 50), "Остановиться", Color3.fromRGB(80, 80, 80), Color3.fromRGB(255, 255, 255))
+-- Setting up buttons
+ToggleButton = createButton(ScreenGui, UDim2.new(0, 0, 0, 0), UDim2.new(0, 100, 0, 50), "Menu", Color3.fromRGB(60, 60, 60), Color3.fromRGB(255, 255, 255))
+CloseButton = createButton(MainFrame, UDim2.new(0.5, -50, 1, -40), UDim2.new(0, 100, 0, 30), "Close", Color3.fromRGB(220, 60, 60), Color3.fromRGB(255, 255, 255))
+FreezeButton = createButton(MainFrame, UDim2.new(0.5, -50, 0, 20), UDim2.new(0, 100, 0, 50), "Freeze", Color3.fromRGB(80, 80, 80), Color3.fromRGB(255, 255, 255))
 
--- Настройка метки и поля ввода скорости
+-- Setting up speed label and input field
 SpeedLabel.Parent = MainFrame
 SpeedLabel.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 SpeedLabel.Position = UDim2.new(0.1, 0, 0.4, 0)
 SpeedLabel.Size = UDim2.new(0.8, 0, 0, 30)
-SpeedLabel.Text = "Скорость:"
+SpeedLabel.Text = "Speed:"
 SpeedLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 SpeedLabel.Font = Enum.Font.SourceSans
 SpeedLabel.TextSize = 24
@@ -70,12 +70,12 @@ SpeedInput.TextSize = 24
 UICornerTemplate:Clone().Parent = SpeedInput
 UIStrokeTemplate:Clone().Parent = SpeedInput
 
--- Настройка метки версии
+-- Setting up version label
 VersionLabel.Parent = MainFrame
 VersionLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 VersionLabel.Position = UDim2.new(0.5, -100, 1, -40)
 VersionLabel.Size = UDim2.new(0, 200, 0, 30)
-VersionLabel.Text = "Версия 1.1"
+VersionLabel.Text = "Version 1.1"
 VersionLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
 VersionLabel.Font = Enum.Font.SourceSans
 VersionLabel.TextSize = 18
@@ -102,12 +102,12 @@ local function toggleFreeze()
                 end
             end)
             isFrozen = true
-            FreezeButton.Text = "Разморозить"
+            FreezeButton.Text = "Unfreeze"
         else
             character.HumanoidRootPart.Anchored = false
             humanoid.WalkSpeed = originalWalkSpeed
             isFrozen = false
-            FreezeButton.Text = "Остановиться"
+            FreezeButton.Text = "Freeze"
             if connection then connection:Disconnect() end
         end
     end
@@ -117,7 +117,7 @@ local function updateSpeedFromInput()
     local inputSpeed = tonumber(SpeedInput.Text)
     if inputSpeed and inputSpeed > 0 then
         currentSpeed = inputSpeed
-        SpeedLabel.Text = "Скорость: " .. tostring(currentSpeed)
+        SpeedLabel.Text = "Speed: " .. tostring(currentSpeed)
     else
         SpeedInput.Text = tostring(currentSpeed)
     end
