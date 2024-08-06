@@ -11,27 +11,28 @@ local i = Instance.new("UICorner")
 local j = Instance.new("UIStroke")
 local k = game:GetService("UserInputService")
 local l = game:GetService("RunService")
+local LocalPlayer = game:GetService("Players").LocalPlayer
 
-a.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+a.Parent = LocalPlayer:WaitForChild("PlayerGui")
 a.Name = "MainMenuGui"
 
 i.CornerRadius = UDim.new(0, 12)
 j.Color = Color3.new(0, 0, 0)
 j.Thickness = 2
 
-local function m(n, o, p, q, r, s)
-    local t = Instance.new("TextButton")
-    t.Parent = n
-    t.Position = o
-    t.Size = p
-    t.Text = q
-    t.BackgroundColor3 = r
-    t.TextColor3 = s
-    t.Font = Enum.Font.SourceSans
-    t.TextSize = 24
-    i:Clone().Parent = t
-    j:Clone().Parent = t
-    return t
+local function createButton(parent, position, size, text, bgColor, textColor)
+    local button = Instance.new("TextButton")
+    button.Parent = parent
+    button.Position = position
+    button.Size = size
+    button.Text = text
+    button.BackgroundColor3 = bgColor
+    button.TextColor3 = textColor
+    button.Font = Enum.Font.SourceSans
+    button.TextSize = 24
+    i:Clone().Parent = button
+    j:Clone().Parent = button
+    return button
 end
 
 b.Parent = a
@@ -42,9 +43,9 @@ b.Visible = false
 b.BorderSizePixel = 0
 i:Clone().Parent = b
 
-c = m(a, UDim2.new(0, 0, 0, 0), UDim2.new(0, 100, 0, 50), "Menu", Color3.fromRGB(60, 60, 60), Color3.fromRGB(255, 255, 255))
-d = m(b, UDim2.new(0.5, -50, 1, -40), UDim2.new(0, 100, 0, 30), "Close", Color3.fromRGB(220, 60, 60), Color3.fromRGB(255, 255, 255))
-e = m(b, UDim2.new(0.5, -50, 0, 20), UDim2.new(0, 100, 0, 50), "Freeze", Color3.fromRGB(80, 80, 80), Color3.fromRGB(255, 255, 255))
+c = createButton(a, UDim2.new(0, 0, 0, 0), UDim2.new(0, 100, 0, 50), "Menu", Color3.fromRGB(60, 60, 60), Color3.fromRGB(255, 255, 255))
+d = createButton(b, UDim2.new(0.5, -50, 1, -40), UDim2.new(0, 100, 0, 30), "Close", Color3.fromRGB(220, 60, 60), Color3.fromRGB(255, 255, 255))
+e = createButton(b, UDim2.new(0.5, -50, 0, 20), UDim2.new(0, 100, 0, 50), "Freeze", Color3.fromRGB(80, 80, 80), Color3.fromRGB(255, 255, 255))
 
 f.Parent = b
 f.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
@@ -70,84 +71,86 @@ h.Parent = b
 h.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 h.Position = UDim2.new(0.5, -100, 1, -40)
 h.Size = UDim2.new(0, 200, 0, 30)
-h.Text = "Version 1.1"
+h.Text = "Version 1.2"  -- Обновленная версия
 h.TextColor3 = Color3.fromRGB(200, 200, 200)
 h.Font = Enum.Font.SourceSans
 h.TextSize = 18
 h.TextXAlignment = Enum.TextXAlignment.Center
 
-local u = false
-local v = 16
-local w = v
-local x
+local isFrozen = false
+local defaultSpeed = 16
+local speed = defaultSpeed
+local moveConnection
 
-local function y()
-    local z = game.Players.LocalPlayer
-    local aa = z.Character
-    local ab = aa:FindFirstChildOfClass("Humanoid")
+local function toggleFreeze()
+    local character = LocalPlayer.Character
+    if not character then return end
 
-    if ab then
-        if not u then
-            aa.HumanoidRootPart.Anchored = true
-            x = l.RenderStepped:Connect(function()
-                if u then
-                    local ac = ab.MoveDirection
-                    local ad = ac * w / 60
-                    aa.HumanoidRootPart.CFrame = aa.HumanoidRootPart.CFrame + ad
+    local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+
+    if humanoidRootPart and humanoid then
+        if not isFrozen then
+            humanoidRootPart.Anchored = true
+            moveConnection = l.RenderStepped:Connect(function()
+                if isFrozen then
+                    local moveDirection = humanoid.MoveDirection
+                    local offset = moveDirection * speed / 60
+                    humanoidRootPart.CFrame = humanoidRootPart.CFrame + offset
                 end
             end)
-            u = true
+            isFrozen = true
             e.Text = "Unfreeze"
         else
-            aa.HumanoidRootPart.Anchored = false
-            ab.WalkSpeed = v
-            u = false
+            humanoidRootPart.Anchored = false
+            humanoid.WalkSpeed = defaultSpeed
+            isFrozen = false
             e.Text = "Freeze"
-            if x then x:Disconnect() end
+            if moveConnection then moveConnection:Disconnect() end
         end
     end
 end
 
-local function ae()
-    local af = tonumber(g.Text)
-    if af and af > 0 then
-        w = af
-        f.Text = "Speed: " .. tostring(w)
+local function updateSpeed()
+    local newSpeed = tonumber(g.Text)
+    if newSpeed and newSpeed > 0 then
+        speed = newSpeed
+        f.Text = "Speed: " .. tostring(speed)
     else
-        g.Text = tostring(w)
+        g.Text = tostring(speed)
     end
 end
 
-g.FocusLost:Connect(function(ag)
-    if ag then
-        ae()
+g.FocusLost:Connect(function(enterPressed)
+    if enterPressed then
+        updateSpeed()
     end
 end)
 
-local ah, ai, aj
+local dragging, dragStart, startPos
 
-local function ak(al)
-    local am = al.Position - ai
-    b.Position = UDim2.new(aj.X.Scale, aj.X.Offset + am.X, aj.Y.Scale, aj.Y.Offset + am.Y)
+local function updateDrag(input)
+    local delta = input.Position - dragStart
+    b.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
 end
 
-b.InputBegan:Connect(function(al)
-    if al.UserInputType == Enum.UserInputType.MouseButton1 or al.UserInputType == Enum.UserInputType.Touch then
-        ah = true
-        ai = al.Position
-        aj = b.Position
+b.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = b.Position
 
-        al.Changed:Connect(function()
-            if al.UserInputState == Enum.UserInputState.End then
-                ah = false
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
             end
         end)
     end
 end)
 
-b.InputChanged:Connect(function(al)
-    if ah and (al.UserInputType == Enum.UserInputType.MouseMovement or al.UserInputType == Enum.UserInputType.Touch) then
-        ak(al)
+b.InputChanged:Connect(function(input)
+    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType.Touch) then
+        updateDrag(input)
     end
 end)
 
@@ -160,5 +163,5 @@ d.MouseButton1Click:Connect(function()
 end)
 
 e.MouseButton1Click:Connect(function()
-    y()
+    toggleFreeze()
 end)
