@@ -1,15 +1,8 @@
 -- Создание интерфейса
 local a = Instance.new("ScreenGui")
 local b = Instance.new("Frame")
-local c = Instance.new("TextButton")
-local d = Instance.new("TextButton")
-local e = Instance.new("TextButton")
-local f = Instance.new("TextLabel")
-local g = Instance.new("TextBox")
-local h = Instance.new("TextLabel")
 local i = Instance.new("UICorner")
 local j = Instance.new("UIStroke")
-local k = game:GetService("UserInputService")
 local l = game:GetService("RunService")
 local LocalPlayer = game:GetService("Players").LocalPlayer
 
@@ -43,10 +36,11 @@ b.Visible = false
 b.BorderSizePixel = 0
 i:Clone().Parent = b
 
-c = createButton(a, UDim2.new(0, 0, 0, 0), UDim2.new(0, 100, 0, 50), "Menu", Color3.fromRGB(60, 60, 60), Color3.fromRGB(255, 255, 255))
-d = createButton(b, UDim2.new(0.5, -50, 1, -40), UDim2.new(0, 100, 0, 30), "Close", Color3.fromRGB(220, 60, 60), Color3.fromRGB(255, 255, 255))
-e = createButton(b, UDim2.new(0.5, -50, 0, 20), UDim2.new(0, 100, 0, 50), "Freeze", Color3.fromRGB(80, 80, 80), Color3.fromRGB(255, 255, 255))
+local c = createButton(a, UDim2.new(0, 0, 0, 0), UDim2.new(0, 100, 0, 50), "Menu", Color3.fromRGB(60, 60, 60), Color3.fromRGB(255, 255, 255))
+local d = createButton(b, UDim2.new(0.5, -50, 1, -40), UDim2.new(0, 100, 0, 30), "Close", Color3.fromRGB(220, 60, 60), Color3.fromRGB(255, 255, 255))
+local e = createButton(b, UDim2.new(0.5, -50, 0, 20), UDim2.new(0, 100, 0, 50), "Freeze", Color3.fromRGB(80, 80, 80), Color3.fromRGB(255, 255, 255))
 
+local f = Instance.new("TextLabel")
 f.Parent = b
 f.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 f.Position = UDim2.new(0.1, 0, 0.4, 0)
@@ -56,6 +50,7 @@ f.TextColor3 = Color3.fromRGB(255, 255, 255)
 f.Font = Enum.Font.SourceSans
 f.TextSize = 24
 
+local g = Instance.new("TextBox")
 g.Parent = b
 g.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
 g.Position = UDim2.new(0.1, 0, 0.5, 0)
@@ -67,11 +62,12 @@ g.TextSize = 24
 i:Clone().Parent = g
 j:Clone().Parent = g
 
+local h = Instance.new("TextLabel")
 h.Parent = b
 h.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 h.Position = UDim2.new(0.5, -100, 1, -40)
 h.Size = UDim2.new(0, 200, 0, 30)
-h.Text = "Version 1.2"  -- Обновленная версия
+h.Text = "Version 1.2"
 h.TextColor3 = Color3.fromRGB(200, 200, 200)
 h.Font = Enum.Font.SourceSans
 h.TextSize = 18
