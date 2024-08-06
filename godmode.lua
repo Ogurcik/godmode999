@@ -1,4 +1,3 @@
-
 local a = Instance.new("ScreenGui")
 local b = Instance.new("Frame")
 local f = Instance.new("TextLabel")
