@@ -157,7 +157,9 @@ b.InputChanged:Connect(function(input)
 end)
 
 c.MouseButton1Click:Connect(function()
+    print("Menu button clicked")  -- Отладочная информация
     b.Visible = not b.Visible
+    print("Menu visibility:", b.Visible)  -- Отладочная информация
 end)
 
 d.MouseButton1Click:Connect(function()
