@@ -91,9 +91,7 @@ local function toggleFreeze()
             humanoidRootPart.Anchored = true
             moveConnection = l.RenderStepped:Connect(function()
                 if isFrozen then
-                    local moveDirection = humanoid.MoveDirection
-                    local offset = moveDirection * speed / 60
-                    humanoidRootPart.CFrame = humanoidRootPart.CFrame + offset
+                    humanoidRootPart.CFrame = humanoidRootPart.CFrame + (humanoid.MoveDirection * speed / 60)
                 end
             end)
             isFrozen = true
